@@ -11,18 +11,25 @@ const authorsJSONPath = join(
 
 const authorsRouter = express.Router()
 
-authorsRouter.post("/", (req, response) => {
-  console.log("body:", req.body)
+authorsRouter.post("/", (req, resp) => {
   const newAuthor = { ...req.body, createdAt: new Date(), id: uniqid() }
-  console.log(newAuthor)
-  //   const authorsArray = JSON.parse(req.body)
-  response.send({ message: "hi mom" })
+  const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
+  authorsArray.push(newAuthor)
+  fs.writeFileSync(authorsJSONPath, JSON.stringify(authorsArray))
+  resp.status(201).send({ id: authorsArray.id })
 })
 
-authorsRouter.get("/", (request, resp) => {
+authorsRouter.get("/", (req, resp) => {
   const fileContent = fs.readFileSync(authorsJSONPath)
   const authorsArray = JSON.parse(fileContent)
   resp.send(authorsArray)
+})
+
+authorsRouter.get("/:authorId", (req, resp) => {
+  console.log(req.params.authorId)
+  const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
+  const getAuthor = authorsArray.find((a) => a.id === req.params.authorId)
+  resp.send(getAuthor)
 })
 
 export default authorsRouter

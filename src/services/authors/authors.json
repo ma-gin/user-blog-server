@@ -1,9 +1,1 @@
-[
-  {
-    "name": "first-name",
-    "surname": "last-name",
-    "email": "name@email.com",
-    "dob": "1968-05-22",
-    "avatar": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.filmonpaper.com%2Fwp-content%2Fuploads%2F2011%2F05%2FRamboFirstBloodPartII_onesheet_USA-5.jpg&f=1&nofb=1"
-  }
-]
+[{"name":"first-name","surname":"last-name","email":"name@email.com","dob":"1968-05-22","avatar":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.filmonpaper.com%2Fwp-content%2Fuploads%2F2011%2F05%2FRamboFirstBloodPartII_onesheet_USA-5.jpg&f=1&nofb=1"},{"name":"Jeff","surname":"Levi","createdAt":"2022-03-01T22:45:21.320Z","id":"1o55z6yh6l08pxc89"}]
