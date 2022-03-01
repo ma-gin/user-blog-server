@@ -26,10 +26,16 @@ authorsRouter.get("/", (req, resp) => {
 })
 
 authorsRouter.get("/:authorId", (req, resp) => {
-  console.log(req.params.authorId)
   const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
   const getAuthor = authorsArray.find((a) => a.id === req.params.authorId)
   resp.send(getAuthor)
+})
+
+authorsRouter.delete("/:authorId", (req, resp) => {
+  const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
+  const remAuthors = authorsArray.filter((a) => a.id !== req.params.authorId)
+  fs.writeFileSync(authorsJSONPath, JSON.stringify(remAuthors))
+  resp.status(204).send()
 })
 
 export default authorsRouter
