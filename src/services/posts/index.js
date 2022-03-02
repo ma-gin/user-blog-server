@@ -3,9 +3,9 @@ import express from "express"
 import { fileURLToPath } from "url"
 import { join, dirname } from "path"
 import uniqid from "uniqid"
-// import createHttpError from "http-errors"
-// import { validationResult } from "express-validator"
-// import { newPostValidation } from "./validation.js"
+import createHttpError from "http-errors"
+import { validationResult } from "express-validator"
+import { newPostValidation } from "./validations.js"
 
 const postsJSONPath = join(
   dirname(fileURLToPath(import.meta.url)),
