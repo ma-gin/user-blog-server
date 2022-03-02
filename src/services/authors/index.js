@@ -27,15 +27,30 @@ authorsRouter.get("/", (req, resp) => {
 
 authorsRouter.get("/:authorId", (req, resp) => {
   const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
-  const getAuthor = authorsArray.find((a) => a.id === req.params.authorId)
+  const getAuthor = authorsArray.find((item) => item.id === req.params.authorId)
   resp.send(getAuthor)
 })
 
 authorsRouter.delete("/:authorId", (req, resp) => {
   const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
-  const remAuthors = authorsArray.filter((a) => a.id !== req.params.authorId)
+  const remAuthors = authorsArray.filter(
+    (item) => item.id !== req.params.authorId
+  )
   fs.writeFileSync(authorsJSONPath, JSON.stringify(remAuthors))
   resp.status(204).send()
+})
+
+authorsRouter.put("/:authorId", (req, resp) => {
+  const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
+  const index = authorsArray.findIndex((item) => {
+    return item.id === req.params.authorId
+  })
+  if (index === -1) resp.status(404).send()
+  const originAuthor = authorsArray[index]
+  const updatedAuthor = { ...originAuthor, ...req.body, updatedAt: new Date() }
+  authorsArray[index] = updatedAuthor
+  fs.writeFileSync(authorsJSONPath, JSON.stringify(authorsArray))
+  resp.send(updatedAuthor)
 })
 
 export default authorsRouter
