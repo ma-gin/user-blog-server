@@ -16,14 +16,37 @@ const postsRouter = express.Router()
 
 const getPosts = () => JSON.parse(fs.readFileSync(postsJSONPath))
 const writePosts = (content) =>
-  fs.writeFileSync(booksJSONPath, JSON.stringify(content))
+  fs.writeFileSync(postsJSONPath, JSON.stringify(content))
 
-postsRouter.post("/", (req, res) => {
-  res.send({ message: "post working" })
+postsRouter.post("/", newPostValidation, (req, res, next) => {
+  try {
+    const errorsList = validationResult(req)
+    if (errorsList.isEmpty()) {
+      const newPost = {
+        ...req.body,
+        createdAt: new Date(),
+        id: uniqid(),
+      }
+      const postsArray = getPosts()
+      postsArray.push(newPost)
+      writePosts(postsArray)
+      res.status(201).send({ id: newPost.id })
+    } else {
+      res.status(400).send({ message: "post did not pass validation" })
+    }
+  } catch (error) {
+    res.send({ message: "error occured post" })
+  }
 })
 
-postsRouter.get("/", (req, res) => {
-  res.send({ message: "get working" })
+postsRouter.get("/", (req, res, next) => {
+  try {
+    const postsArray = getPosts()
+    console.log("hello get")
+    res.send(postsArray)
+  } catch (error) {
+    res.send({ message: "error occured get" })
+  }
 })
 
 postsRouter.get("/:postId", (req, res) => {
