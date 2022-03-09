@@ -13,7 +13,8 @@ server.use("/posts", postsRouter)
 server.use("/authors", authorsRouter)
 
 server.listen(port, () => {
-  console.log(`Server running on port ${port}.`)
+  console.log(`Server running on port ${port}.
+  Started on ${new Date()}`)
 })
 
 console.table(listEndpoints(server))
