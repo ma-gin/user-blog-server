@@ -42,23 +42,61 @@ postsRouter.post("/", newPostValidation, (req, res, next) => {
 postsRouter.get("/", (req, res, next) => {
   try {
     const postsArray = getPosts()
-    console.log("hello get")
     res.send(postsArray)
   } catch (error) {
     res.send({ message: "error occured get" })
   }
 })
 
-postsRouter.get("/:postId", (req, res) => {
-  res.send({ message: "get post working" })
+postsRouter.get("/:postId", (req, res, next) => {
+  try {
+    const postId = req.params.postId
+    const postsArray = getPosts()
+    const post = postsArray.find((item) => item.id === postId)
+    if (!post) res.status(404).send({ message: `post ${postId} not found` })
+    res.send(post)
+  } catch (error) {
+    res.send({ message: "error occured get id" })
+  }
 })
 
-postsRouter.delete("/:postId", (req, res) => {
-  res.send({ message: "delete working" })
+postsRouter.delete("/:postId", (req, res, next) => {
+  try {
+    console.log("hey delete")
+    const postId = req.params.postId
+    const postsArray = getPosts()
+    const remPosts = postsArray.filter((item) => item.id !== postId)
+    console.log(remPosts)
+    writePosts(remPosts)
+    res.send({ message: `post ${postId} deleted successfully` })
+  } catch (error) {
+    res.send({ message: "error occured delete" })
+  }
 })
 
-postsRouter.put("/:postId", (req, res) => {
-  res.send({ message: "put working" })
+postsRouter.put("/:postId", newPostValidation, (req, res, next) => {
+  try {
+    const errorsList = validationResult(req)
+    if (errorsList.isEmpty()) {
+      const postId = req.params.postId
+      const postsArray = getPosts()
+      const index = postsArray.findIndex((item) => item.id === postId)
+      if (index === -1) res.status(404).send({ message: "no such post found" })
+      const originalPost = postsArray[index]
+      const updatedPost = {
+        ...originalPost,
+        ...req.body,
+        updatedAt: new Date(),
+      }
+      postsArray[index] = updatedPost
+      writePosts(postsArray)
+      res.status(201).send(updatedPost)
+    } else {
+      res.status(400).send({ message: "post did not pass validation" })
+    }
+  } catch (error) {
+    res.send({ message: "error occured put" })
+  }
 })
 
 export default postsRouter
