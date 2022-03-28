@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon -e js ./src/server.js"
+    "dev": "nodemon -r dotenv/config src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "uniqid": "^5.4.0"
   },
   "devDependencies": {
+    "dotenv": "^16.0.0",
     "nodemon": "^2.0.15"
   }
 }

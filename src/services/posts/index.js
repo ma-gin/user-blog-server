@@ -6,12 +6,13 @@ import uniqid from "uniqid"
 import createHttpError from "http-errors"
 import { validationResult } from "express-validator"
 import { newPostValidation } from "./validations.js"
+import { authorFindById } from "../authors/index.js"
+// import post from "./model.js"
 
 const postsJSONPath = join(
   dirname(fileURLToPath(import.meta.url)),
   "posts.json"
 )
-
 const postsRouter = express.Router()
 
 const getPosts = () => JSON.parse(fs.readFileSync(postsJSONPath))
@@ -39,10 +40,14 @@ postsRouter.post("/", newPostValidation, (req, res, next) => {
   }
 })
 
-postsRouter.get("/", (req, res, next) => {
+postsRouter.get("/", async (req, res, next) => {
   try {
     const postsArray = getPosts()
-    res.send(postsArray)
+    const postsArrayWithAuthors = postsArray.map((post) => ({
+      ...post,
+      author: authorFindById(post.author),
+    }))
+    res.send(postsArrayWithAuthors)
   } catch (error) {
     res.send({ message: "error occured get" })
   }

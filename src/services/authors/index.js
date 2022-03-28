@@ -11,6 +11,12 @@ const authorsJSONPath = join(
   "authors.json"
 )
 
+export const authorFindById = (id) => {
+  const authorsArray = JSON.parse(fs.readFileSync(authorsJSONPath))
+  const author = authorsArray.find((item) => item.id === id) || id
+  return author
+}
+
 const authorsRouter = express.Router()
 
 authorsRouter.post("/", newAuthorValidation, (req, res, next) => {

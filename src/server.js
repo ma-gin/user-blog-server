@@ -5,16 +5,29 @@ import postsRouter from "./services/posts/index.js"
 import cors from "cors"
 
 const server = express()
-const port = 3001
+const { PORT } = process.env
+
+const corsOrigin = [process.env.PROD, process.env.FE]
 
 server.use(cors())
 server.use(express.json())
 server.use("/posts", postsRouter)
 server.use("/authors", authorsRouter)
-
-server.listen(port, () => {
-  console.log(`Server running on port ${port}.
-  Started on ${new Date()}`)
-})
+server.use(
+  cors({
+    origin: function (origin, next) {
+      if (!origin || corsOrigin.indexOf(origin !== -1)) {
+        next(null, true)
+      } else {
+        next(new Error("cors error!"))
+      }
+    },
+  })
+)
 
 console.table(listEndpoints(server))
+
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}. 
+Started on ${new Date()}`)
+})
