@@ -15,4 +15,25 @@ usersRouter.post("/", async (req, res, next) => {
   }
 })
 
+usersRouter.post("/login", async (req, res, next) => {
+  try {
+    const { email, password } = req.body
+
+    const user = await UsersModel.checkCredentials(email, password)
+
+    if (user) {
+      const accessToken = await generateAccessToken({
+        _id: user._id,
+        role: user.role,
+      })
+      console.log(accessToken)
+      res.send({ accessToken })
+    } else {
+      next(createError(401, `Credentials are not ok!`))
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default usersRouter
