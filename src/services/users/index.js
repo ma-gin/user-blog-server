@@ -1,6 +1,7 @@
 import express from "express"
 import createError from "http-errors"
 import UsersModel from "./model.js"
+import { generateAccessToken } from "../../auth/tools.js"
 
 const usersRouter = express.Router()
 
